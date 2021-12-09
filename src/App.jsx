@@ -2,10 +2,16 @@ import React from "react"
 
 
 class Key extends React.Component{
+
+  constructor(props) {
+    super(props)
+    this.state = {...props}
+  }
   
   render() {
     return (
       <button className="drum-pad">
+        {this.state.name}
         <audio
           className="clip">
           <code>audio</code>
@@ -70,22 +76,41 @@ class App extends React.Component{
         }
       ],
     }
+    this.handleSwitchActions = this.handleSwitchActions.bind(this);
   }
 
-
+  handleSwitchActions(ev) {
+    const { id: switchID } = ev.target;  // we take the name of the elt that created the event
+    console.log(switchID)
+    switch (switchID) {
+      case "power":
+        this.setState({power: !this.state.power})
+        break;
+      case "instrument":
+        if (this.state.instrument === "drum") {
+          this.setState({instrument: "piano"})          
+        } else {
+          this.setState({ instrument: "drum" })
+        }
+        break;    
+      default:
+        break;
+    }
+  }
 
   render() {
+    console.log(this.state)
     return (
       <div className="container">
         <div id="drum-machine">
           <div id="drum-keys">
-              {this.state.keys.map(elt => <Key/>)}
+            {this.state.keys.map(elt => <Key key={elt.key} name={elt.key} />)}
           </div>
           <div id="drum-controls">
               {/* rounded switch for power */}
-            <label name="power" className="switch">
+            <label className="switch">
               <input type="checkbox"/>
-              <span id="power" className="slider round"></span>
+              <span id="power" onClick={this.handleSwitchActions} className="slider round"></span>
             </label>
             <p id="display"></p>
 
@@ -93,7 +118,7 @@ class App extends React.Component{
               {/* rounded switch for bank */}
             <label className="switch">
               <input type="checkbox"/>
-              <span id="instrument" className="slider round"></span>
+              <span id="instrument" onClick={this.handleSwitchActions} className="slider round"></span>
             </label>
           </div>
         </div>
