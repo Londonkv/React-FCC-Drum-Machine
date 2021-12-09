@@ -2,22 +2,20 @@ import React from "react"
 
 
 class Key extends React.Component{
-
-  constructor(props) {
-    super(props)
-    this.state = {...props}
-  }
-  
   render() {
+    console.log(this.props)
     return (
       <button className="drum-pad">
-        {this.state.name}
+        {this.props.name}
         <audio
-          className="clip">
+          className="clip" id={this.props.name} src={"https://s3.amazonaws.com/freecodecamp/drums/"+ this.props.soundAddr}>
           <code>audio</code>
         </audio>
       </button>
     )
+  }
+  componentDidUpdate() {
+    console.log("======= updated")
   }
 }
 
@@ -104,7 +102,7 @@ class App extends React.Component{
       <div className="container">
         <div id="drum-machine">
           <div id="drum-keys">
-            {this.state.keys.map(elt => <Key key={elt.key} name={elt.key} />)}
+            {this.state.keys.map(elt => <Key key={elt.key} name={elt.key} power={this.state.power} soundAddr={this.state.instrument === "piano"? elt.soundAddr[0]: elt.soundAddr[1]}/>)}
           </div>
           <div id="drum-controls">
               {/* rounded switch for power */}
