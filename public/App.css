@@ -1,0 +1,229 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+        "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+        "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* background-color: #ffd8b8; */
+    background: linear-gradient(45deg, #38322b, #423b33);
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+        monospace;
+}
+
+#root {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    /* background-color: #3e3730; */
+    padding: 1.5rem;
+    border-radius: 57px;
+    box-shadow: 16px -16px 30px #2a2521, -16px 16px 30px #52493f;
+    padding: 60px;
+}
+
+#drum-machine {
+    display: flex;
+}
+
+#drum-controls {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 300px;
+    padding: 2rem;
+    align-self: center;
+}
+
+#display {
+    padding: 5px;
+    text-align: center;
+    font-size: 1rem;
+    width: 250px;
+    height: 44px;
+    font-weight: bolder;
+    border: 3px solid #262320;
+    border-radius: 10px;
+    color: #999;
+    margin: 5px;
+    border-radius: 40px;
+    background: linear-gradient(45deg, #22201d, #292522);
+    box-shadow: 6px -6px 16px #1a1816, -6px 6px 16px #322e2a;
+}
+/* volume slider css */
+#audio-volume {
+    overflow: hidden;
+    -webkit-appearance: none;
+    background-color: #999;
+    border-radius: 5px;
+    color: #292522;
+    box-shadow: 6px -6px 16px #1a1816, -6px 6px 16px #322e2a;
+}
+
+input[type="range"] {
+    overflow: hidden;
+    -webkit-appearance: none;
+    background-color: #9a905d;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+    /* -webkit-appearance: none; */
+    margin-top: -1px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    width: 15px;
+    -webkit-appearance: none;
+    height: 15px;
+    background: #434343;
+    box-shadow: -80px 0 0 80px #cc9450;
+}
+
+/* end of volume slider css */
+#drum-keys {
+    max-width: 500px;
+    min-width: 360px;
+    height: 300px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    border-radius: 40px;
+    padding: 50px;
+}
+.drum-pad {
+    font-size: 2rem;
+    font-weight: 700;
+    display: inline-block;
+    width: 28%;
+    border: 1px solid #443c38;
+    /* background: #262320; */
+    color: #ffd8b885;
+    margin: 5px;
+    border-radius: 40px;
+    background: linear-gradient(45deg, #22201d, #292522);
+    box-shadow: 6px -6px 16px #1a1816, -6px 6px 16px #322e2a;
+}
+
+/* Switches css */
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: block;
+    width: 60px;
+    height: 34px;
+    border-radius: 17px;
+    box-shadow: 6px -6px 16px #1a1816, -6px 6px 16px #322e2a;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #999;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+}
+
+/* End of slider css */
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background: linear-gradient(45deg, #22201d, #292522);
+    -webkit-transition: 0.4s;
+    transition: 0.6s;
+}
+
+input:checked + .slider {
+    background-color: #cc9450;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #cc9450;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 18px;
+}
+
+.slider.round:before {
+    border-radius: 40%;
+}
+
+/* FOR SMALLER DEVICE */
+@media (max-width: 750px) {
+    #root {
+        min-height: 100vh;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+    #drum-machine {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    #drum-controls {
+        height: 300px;
+        padding: 2rem;
+        align-self: center;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-evenly;
+        align-content: space-around;
+    }
+
+    #drum-controls {
+        height: 200px;
+        padding: 1rem;
+        flex-direction: row;
+        align-self: center;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-evenly;
+        align-content: space-around;
+    }
+    #display {
+        order: 1;
+    }
+    .switch {
+        margin: 0 15px;
+    }
+}
