@@ -2,20 +2,28 @@ import React from "react"
 
 
 class Key extends React.Component{
+  constructor() {
+    super()
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(ev) {
+    if (this.props.power) {
+      const audioElement = ev.target.querySelector("audio");
+      audioElement.volume = this.props.volume / 100;
+      audioElement.play();
+    }
+  }
   render() {
-    console.log(this.props)
     return (
-      <button className="drum-pad">
+      <button className="drum-pad" id={this.props.name}  onClick={this.handleClick} >
         {this.props.name}
         <audio
-          className="clip" id={this.props.name} src={"https://s3.amazonaws.com/freecodecamp/drums/"+ this.props.soundAddr}>
+          className="clip" src={"https://s3.amazonaws.com/freecodecamp/drums/"+ this.props.soundAddr}>
           <code>audio</code>
         </audio>
       </button>
     )
-  }
-  componentDidUpdate() {
-    console.log("======= updated")
   }
 }
 
@@ -25,7 +33,8 @@ class App extends React.Component{
     super();
     this.state = {
       instrument: "drum",
-      power:false,
+      power: false,
+      volume:50,
       keys: [
         {
           key: "Q",
@@ -75,20 +84,26 @@ class App extends React.Component{
       ],
     }
     this.handleSwitchActions = this.handleSwitchActions.bind(this);
+    this.handleVolume = this.handleVolume.bind(this);
+    this.handledisplay = this.handledisplay.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   handleSwitchActions(ev) {
     const { id: switchID } = ev.target;  // we take the name of the elt that created the event
-    console.log(switchID)
     switch (switchID) {
       case "power":
-        this.setState({power: !this.state.power})
+        this.setState({ power: !this.state.power });
+        if (!this.state.power) this.handledisplay("Power On");
+        else this.handledisplay("Power Off");
         break;
       case "instrument":
         if (this.state.instrument === "drum") {
-          this.setState({instrument: "piano"})          
+          this.setState({ instrument: "piano" });
+          this.handledisplay("Smooth Piano Kit");
         } else {
-          this.setState({ instrument: "drum" })
+          this.setState({ instrument: "drum" });
+          this.handledisplay("Heater Kit");
         }
         break;    
       default:
@@ -96,25 +111,46 @@ class App extends React.Component{
     }
   }
 
+  handledisplay(message) {
+    document.getElementById("display").innerText = message;
+  }
+
+  handleVolume(ev) {
+    const { value: volumeValue } = ev.target;
+    this.setState({ volume: volumeValue })
+    this.handledisplay("Volume: "+volumeValue)
+  }
+
+  handleKeyDown(ev) {
+    if (this.state.power) {
+      let key = (ev.key).toLocaleUpperCase()
+      let allKeys = this.state.keys.map(elt => elt.key)
+      if (allKeys.includes(key)) {
+        document.getElementById(key).click()
+      }
+    }
+  }
+
   render() {
-    console.log(this.state)
     return (
       <div className="container">
         <div id="drum-machine">
           <div id="drum-keys">
-            {this.state.keys.map(elt => <Key key={elt.key} name={elt.key} power={this.state.power} soundAddr={this.state.instrument === "piano"? elt.soundAddr[0]: elt.soundAddr[1]}/>)}
+            {this.state.keys.map(elt => <Key key={elt.key} name={elt.key} volume={this.state.volume} power={this.state.power} soundAddr={this.state.instrument === "drum"? elt.soundAddr[0]: elt.soundAddr[1]}/>)}
           </div>
           <div id="drum-controls">
               {/* rounded switch for power */}
             <label className="switch">
+              <span className="switch-label">Power</span>
               <input type="checkbox"/>
               <span id="power" onClick={this.handleSwitchActions} className="slider round"></span>
             </label>
             <p id="display"></p>
 
-            <input type="range" id="audio-volume" name="volume" min="0" max="100"/>
+            <input type="range" id="audio-volume" name="volume" min="0" max="100" onChange={this.handleVolume}/>
               {/* rounded switch for bank */}
             <label className="switch">
+              <span className="switch-label">Bank</span>
               <input type="checkbox"/>
               <span id="instrument" onClick={this.handleSwitchActions} className="slider round"></span>
             </label>
@@ -122,6 +158,10 @@ class App extends React.Component{
         </div>
       </div>
     );
+  }
+
+  componentDidMount() {
+    window.addEventListener("keydown", this.handleKeyDown)
   }
 }
 
