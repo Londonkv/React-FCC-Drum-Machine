@@ -8,9 +8,10 @@ class Key extends React.Component{
   }
 
   handleClick(ev) {
-    if (this.props.power) {
+    if (this.props.power) {  // if the power's off, all clicks are ignored
       const audioElement = ev.target.querySelector("audio");
-      audioElement.volume = this.props.volume / 100;
+      audioElement.volume = this.props.volume / 100;  // sets the volume the sounds will be played at
+      this.props.onMusic(this.props.soundDescription)
       audioElement.play();
     }
   }
@@ -20,7 +21,6 @@ class Key extends React.Component{
         {this.props.name}
         <audio
           className="clip" src={"https://s3.amazonaws.com/freecodecamp/drums/"+ this.props.soundAddr}>
-          <code>audio</code>
         </audio>
       </button>
     )
@@ -112,7 +112,7 @@ class App extends React.Component{
   }
 
   handledisplay(message) {
-    document.getElementById("display").innerText = message;
+    document.getElementById("display").innerText = message;  // sets the text in the display element
   }
 
   handleVolume(ev) {
@@ -133,30 +133,44 @@ class App extends React.Component{
 
   render() {
     return (
-      <div className="container">
-        <div id="drum-machine">
-          <div id="drum-keys">
-            {this.state.keys.map(elt => <Key key={elt.key} name={elt.key} volume={this.state.volume} power={this.state.power} soundAddr={this.state.instrument === "drum"? elt.soundAddr[0]: elt.soundAddr[1]}/>)}
-          </div>
-          <div id="drum-controls">
-              {/* rounded switch for power */}
-            <label className="switch">
-              <span className="switch-label">Power</span>
-              <input type="checkbox"/>
-              <span id="power" onClick={this.handleSwitchActions} className="slider round"></span>
-            </label>
-            <p id="display"></p>
+      <React.Fragment>
+        <h1 id="page-title">Drum Machine</h1>
+        <div className="container">
+          <div id="drum-machine">
+            <div id="drum-keys">
+              {this.state.keys.map(elt =>
+                <Key
+                  key={elt.key}
+                  name={elt.key}
+                  onMusic={this.handledisplay}
+                  volume={this.state.volume}
+                  power={this.state.power}
+                  soundDescription={this.state.instrument === "drum" ? elt.soundDescription[0] : elt.soundDescription[1]}
+                  soundAddr={this.state.instrument === "drum" ? elt.soundAddr[0] : elt.soundAddr[1]}                  
+                />)
+              }
+            </div>
+            <div id="drum-controls">
+                {/* rounded switch for power */}
+              <label className="switch">
+                <span className="switch-label">Power</span>
+                <input type="checkbox"/>
+                <span id="power" onClick={this.handleSwitchActions} className="slider round"></span>
+              </label>
+              <p id="display"></p>
 
-            <input type="range" id="audio-volume" name="volume" min="0" max="100" onChange={this.handleVolume}/>
-              {/* rounded switch for bank */}
-            <label className="switch">
-              <span className="switch-label">Bank</span>
-              <input type="checkbox"/>
-              <span id="instrument" onClick={this.handleSwitchActions} className="slider round"></span>
-            </label>
+              <input type="range" id="audio-volume" name="volume" min="0" max="100" onChange={this.handleVolume}/>
+                {/* rounded switch for bank */}
+              <label className="switch">
+                <span className="switch-label">Bank</span>
+                <input type="checkbox"/>
+                <span id="instrument" onClick={this.handleSwitchActions} className="slider round"></span>
+              </label>
+            </div>
           </div>
         </div>
-      </div>
+        <footer>Made by London</footer>
+      </React.Fragment>
     );
   }
 
